@@ -4,16 +4,34 @@
 #simultaneously columns must be spun
 #few variables used to keep track of balance
 #random used for no. of spin one column is going to do
+#file handling lessons
+#using pygame module for the first time for sound
 
 
 # pyright: reportWildcardImportFromLibrary=false
 from random import *
 import time
 from numpy import *
+import os
+os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
+import pygame
 
 
 balance = 100
 spin_cost = 10
+spin = r"C:\Users\Sumit Roy\OneDrive\Documents\Amit Folder\VSC\Programs\Games\Gambling777\slot machine spin sound.mp3"
+spinover = r"C:\Users\Sumit Roy\OneDrive\Documents\Amit Folder\VSC\Programs\Games\Gambling777\winsound.mp3"
+high = r"C:\Users\Sumit Roy\OneDrive\Documents\Amit Folder\VSC\Programs\Games\Gambling777\W.mp3"
+
+pygame.mixer.init()
+
+def overspin() :
+      pygame.mixer.music.load(spinover)
+      pygame.mixer.music.play(0)
+
+def w() :
+      pygame.mixer.music.load(high)
+      pygame.mixer.music.play(-1)
 
 def roller():
 
@@ -25,6 +43,8 @@ def roller():
     l = randint(20,25)
     m = randint(32,37)
     n = randint(40,50)
+    pygame.mixer.music.load(spin)
+    pygame.mixer.music.play(-1)
     for i in range(n) :
         if i <= l :
             column_1 = roll(column_1, 1)
@@ -41,6 +61,10 @@ def roller():
         if i <(n-1) :
             print("\033[3F", end="")
         time.sleep(0.2)
+
+    pygame.mixer.music.stop()
+    overspin()
+
     c1d = column_1[1]
     c2d = column_2[1]
     c3d = column_3[1]
@@ -72,7 +96,7 @@ if r == ("r" or 'R'):
      time.sleep(2)
      print("If two symbols matches, you earn 20 units, ")
      time.sleep(2)
-     print("If all symbols same : N = 0, % = 60, $ = 70,... 7 = 100!")
+     print("If all symbols same : N = 0, & = 60, $ = 70,... 7 = 100!")
      time.sleep(3)
      print("T&C Apply, .|.., those small dots are the T&C, go fuck yourself if you can't read it")
      time.sleep(8)
@@ -92,7 +116,7 @@ while balance>0 :
             print("JACKPOT!")
         elif cd[0]==cd[1]==cd[2]=="$" :
                         balance= balance + 80
-        elif cd[0]==cd[1]==cd[2]=="%" :
+        elif cd[0]==cd[1]==cd[2]=="&" :
                         balance= balance + 70
         elif cd[0]==cd[1]==cd[2]=="N" :
                         print("Luckily Unlucky, Noob")
@@ -100,8 +124,11 @@ while balance>0 :
         elif cd[0]==cd[1] or cd[0]==cd[2] or cd[2]==cd[1] :
                     balance = balance + 30
     else :
+         if balance < 100 :
+            time.sleep(1)
+            print("\n That's it? I thought you were going to earn more profit....... For me XD")
+            time.sleep(3)
          time.sleep(1)
-         print("\n That's it? I thought you were going to earn more profit....... For me XD")
          print("Your balance : ", balance)
          break
 if balance <= 0 :
@@ -127,7 +154,21 @@ if score > highscore:
         file.write(str(highscore))
 
     print("NEW HIGH SCORE!")
+    w()
+    time.sleep(5)
+    if input("Press Enter To EXIT") == "" :
+          pygame.mixer.music.stop()
+          print("Fuck Luck, Adios")
 else:
     print("High score:", highscore)
+    time.sleep(2)
+
+    #reset high
+    print("Is the High Score TOO High For you? No worries, wanna reset highscore? Press y/Y, else anything ")
+    if input() == ("y" or "Y") :
+              with open("highscore.txt", "w") as file :
+                    file.write("0")
+              print("High Score has been RESET")
+    print("Fuck Luck, Adios")
 
 #no problemo, working as intended, Bravo!
